@@ -12,9 +12,13 @@ class Target:
         self.height = h
         self.loc = loc
 
-    def instantiate(self, x, y):
-        self.x = self.loc[0]
-        self.y = self.loc[1]
+    def instantiate(self, x = None, y = None):
+        if x == None:
+            x = np.random.randint(0, 1920)
+        if y == None:
+            y = np.random.randint(0, 1080)
+        self.x = x
+        self.y = y
         self.targeton = True
 
     def destroy(self):
