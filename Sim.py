@@ -30,7 +30,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:eq
+            if event.key == pygame.K_e:
                 force_right = .2
             if event.key == pygame.K_d:
                 force_right = .1
@@ -56,8 +56,6 @@ while running:
     force_rot = force_left - force_right
     object.setVelocity()
     object.applyForce(input.calculateforward(object.rot, force_front), force_rot)
-    if target.x + 0.5*target.width > object.loc[0] > target.x - 0.5*target.width and target.y + 0.5*target.height > object.loc[1] > target.y - 0.5*target.height:
-        print("yes")
     object.move()
     object.boundries(1920, 1080)
     target.draw(screen)
