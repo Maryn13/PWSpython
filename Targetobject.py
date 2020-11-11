@@ -26,3 +26,6 @@ class Target:
                                 (self.x + 0.5 * self.width, self.y - 0.5 * self.height),
                                 (self.x - 0.5 * self.width, self.y - 0.5 * self.height),
                                 (self.x - 0.5 * self.width, self.y + 0.5 * self.height)])
+    def check(self, xobj, yobj):
+        if self.x + 0.5 * self.width > xobj > self.x - 0.5 * self.width and self.y + 0.5 * self.height > yobj > self.y - 0.5 * self.height:
+            print("yes")
