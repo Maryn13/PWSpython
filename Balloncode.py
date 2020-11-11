@@ -28,7 +28,7 @@ class PO:
        self.cm = cm
        self.m = m
        self.i = 2 / 3 * self.m * width
-       self.loc = np.array([500, 500])
+       self.loc = np.array([np.random.randint(0, 1920), np.random.randint(0, 1080)])
        self.dt = 15/30
 
 
@@ -107,4 +107,3 @@ class PO:
        r = math.sqrt((0.5*self.width*0.5*self.width)+(0.5*self.width*0.5*self.width))
 
        pygame.draw.polygon(screen, [250, 0, 0], [tuple(np.add(self.loc, modrot.dot(p1))), tuple(np.add(self.loc, modrot.dot(p2))), tuple(np.add(self.loc, modrot.dot(p3))), tuple(np.add(self.loc, modrot.dot(p4)))])
-
