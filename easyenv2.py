@@ -302,17 +302,17 @@ class DQNAgent:
     
     def update_target(self, softupdate, steps, tau):
         if not self.Soft_Update and self.ddqn:
-            self.target_model.set_weights(self.model.get_weights())
+            self.target_model.set_parameters(self.model.get_parameters())
             return
-        if self.Soft_Update and self.ddqn:
+        if softupdate:
             q_model_theta = self.model.get_weights()
-            target_model_theta = self.target_model.get_weights()
+            target_model_theta = self.target_model.get_parameters()
             counter = 0
             for q_weight, target_weight in zip(q_model_theta, target_model_theta):
-                target_weight = target_weight * (1-tau) + q_weight * self.tau
+                target_weight = target_weight * (1-tau) + q_weight * tau
                 target_model_theta[counter] = target_weight
                 counter += 1
-            self.target_model.set_weights(target_model_theta)
+            self.target_model.set_parameters(target_model_theta)
         
 
 agent = DQNAgent()
