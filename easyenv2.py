@@ -24,7 +24,7 @@ EPISODES = 20_000
 # Exploration settings
 epsilon = 1  # not a constant, going to be decayed
 EPSILON_DECAY = 0.99975
-MIN_EPSILON = 0.001
+MIN_EPSILON = 0.01
 
 #  Stats settings
 AGGREGATE_STATS_EVERY = 100  # episodes
@@ -294,14 +294,26 @@ class DQNAgent:
             self.target_update_counter += 1
 
         # If counter reaches set value, update target network with weights of main network
-        if self.target_update_counter > UPDATE_TARGET_EVERY:
-            self.target_model.set_parameters(self.model.get_parameters())
-            self.target_update_counter = 0
+        self.update_target(True, UPDATE_TARGET_EVERY, 0.001)
 
     # Queries main network for Q values given current observation space (environment state)
     def get_qs(self, state):
         return self.model.predict(np.array(state))
-
+    
+    def update_target(self, softupdate, steps, tau):
+        if not self.Soft_Update and self.ddqn:
+            self.target_model.set_weights(self.model.get_weights())
+            return
+        if self.Soft_Update and self.ddqn:
+            q_model_theta = self.model.get_weights()
+            target_model_theta = self.target_model.get_weights()
+            counter = 0
+            for q_weight, target_weight in zip(q_model_theta, target_model_theta):
+                target_weight = target_weight * (1-tau) + q_weight * self.tau
+                target_model_theta[counter] = target_weight
+                counter += 1
+            self.target_model.set_weights(target_model_theta)
+        
 
 agent = DQNAgent()
 
