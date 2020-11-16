@@ -301,11 +301,12 @@ class DQNAgent:
         return self.model.predict(np.array(state))
     
     def update_target(self, softupdate, steps, tau):
-        if not self.Soft_Update and self.ddqn:
+        if not softupdate:
             self.target_model.set_parameters(self.model.get_parameters())
+            self.target_update_counter = 0
             return
         if softupdate:
-            q_model_theta = self.model.get_weights()
+            q_model_theta = self.model.get_parameters()
             target_model_theta = self.target_model.get_parameters()
             counter = 0
             for q_weight, target_weight in zip(q_model_theta, target_model_theta):
