@@ -12,7 +12,7 @@ class Target:
         self.height = h
         self.loc = loc
 
-    def instantiate(self, x = None, y = None):
+    def instantiate(self, x=None, y=None):
         if x == None:
             x = np.random.randint(0, 1920)
         if y == None:
@@ -32,4 +32,4 @@ class Target:
                                 (self.x - 0.5 * self.width, self.y + 0.5 * self.height)])
     def check(self, xobj, yobj):
         if self.x + 0.5 * self.width > xobj > self.x - 0.5 * self.width and self.y + 0.5 * self.height > yobj > self.y - 0.5 * self.height:
-            print("yes")
+            return True
