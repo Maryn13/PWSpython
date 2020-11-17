@@ -8,6 +8,7 @@ from PIL import Image
 import cv2
 import numpy as np
 import nn1 as nn
+import matplotlib.pyplot as plt
 
 
 DISCOUNT = 0.999
@@ -351,6 +352,10 @@ for episode in tqdm(range(1, EPISODES + 1), ascii=True, unit='episodes'):
         average_reward = sum(ep_rewards[-AGGREGATE_STATS_EVERY:])/len(ep_rewards[-AGGREGATE_STATS_EVERY:])
         min_reward = min(ep_rewards[-AGGREGATE_STATS_EVERY:])
         max_reward = max(ep_rewards[-AGGREGATE_STATS_EVERY:])
+        episodes.append(episode)
+        averages.append(average_reward)
+        minimums.append(min_reward)
+        maximums.append(max_reward)
         print(f'episode{episode}')
         print(f'average reward: {average_reward}')
         print(f'reward min: {min_reward}')
@@ -364,5 +369,8 @@ for episode in tqdm(range(1, EPISODES + 1), ascii=True, unit='episodes'):
     if epsilon > MIN_EPSILON:
         epsilon *= EPSILON_DECAY
         epsilon = max(MIN_EPSILON, epsilon)
-
+plt.plot(episodes,minimums, color = 'red')
+plt.plot(episodes,averages, color = 'blue')
+plt.plot(episodes,maximums, colour = 'green')
+plt.show
 agent.model.save("model1")
