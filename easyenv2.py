@@ -209,7 +209,7 @@ class DQNAgent:
 
         # An array with last n steps for training
         self.replay_memory = deque(maxlen=REPLAY_MEMORY_SIZE)
-
+        self.priorities = deque(maxlen = REPLAY_MEMORY_SIZE)
 
 
         # Used to count when to update target network with main network's weights
@@ -243,7 +243,13 @@ class DQNAgent:
     # (observation space, action, reward, new observation space, done)
     def update_replay_memory(self, transition):
         self.replay_memory.append(transition)
-
+      
+        
+   
+    def sample(self, size):
+        
+        samples = random.sample(self.replay_memory,size)
+        return samples
     # Trains main network every step during episode
     def train(self, terminal_state, step):
 
@@ -252,7 +258,7 @@ class DQNAgent:
             return
 
         # Get a minibatch of random samples from memory replay table
-        minibatch = random.sample(self.replay_memory, MINIBATCH_SIZE)
+        minibatch = self.sample(MINIBATCH_SIZE)
 
         # Get current states from minibatch, then query NN model for Q values
         current_states = np.array([transition[0] for transition in minibatch])
