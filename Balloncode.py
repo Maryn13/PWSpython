@@ -12,13 +12,13 @@ class PO:
 
    angacc = 0
 
-   loc = np.array([500, 500])
+   loc = np.array([800, 800])
 
    vel = np.array([0, 0])
 
    acc = np.array([0, 0])
 
-   def __init__(self, name, width, length, weight, mps, cm, m):
+   def __init__(self, name, width, length, weight, mps, cm, m, loc = None):
 
        self.name = name
        self.width = width
@@ -28,15 +28,28 @@ class PO:
        self.cm = cm
        self.m = m
        self.i = 2 / 3 * self.m * width
-       self.loc = np.array([np.random.randint(0, 1920), np.random.randint(0, 1080)])
-       self.dt = 15/30
+       if loc == None:
+           self.loc = [np.random.randint(0, 1920), np.random.randint(0, 1080)]
+       else:
+           self.loc = loc
+       self.dt = 1/60
 
 
 
 
 
 
-   def applyForce(self, force, rotForce):
+   def applyForce(self, force_left, force_right):
+
+       if (force_left >= 0 and force_right >= 0) or (force_left < 0 and force_right < 0):
+           force_front = force_left + force_right - abs(force_left - force_right)
+       elif (force_left < 0 and force_right == 0) or (force_right < 0 and force_left == 0):
+           force_front = 0
+       else:
+           force_front = force_left + force_right  # + abs(force_left - force_right)
+
+       force_rot = force_left - force_right
+       force = np.array([math.cos(self.rot) * force_front, math.sin(self.rot) * force_front])
 
        fmag = math.sqrt(force[0]*force[0]+force[1]*force[1])
        alpha = 0
@@ -69,14 +82,37 @@ class PO:
            fwacc = np.array([math.cos(phi) * fwmag / self.m, math.sin(phi) * fwmag / self.m])
        facc = np.add(facc, -fwacc)
        self.acc = facc
-       self.angacc = rotForce / self.i
+       self.angacc = force_rot / self.i
 
 
+   def action(self, choice):
+       if choice == 0:
+           pass #niks
+       elif choice == 1:
+           self.applyForce(0.2, 0)
+       elif choice == 2:
+           self.applyForce(0.0, 0.2)
+       elif choice == 3:
+           self.applyForce(0.2, 0.2)
+
+       elif choice == 4:
+           self.applyForce(-0.2, 0.0)
+       elif choice == 5:
+           self.applyForce(0.0, -0.2)
+
+       elif choice == 6:
+           self.applyForce(-0.2, -0.2)
+       elif choice == 7:
+           self.applyForce(0.2, -0.2)
+
+       elif choice == 8:
+           self.applyForce(-0.2, 0.2)
 
 
    def setVelocity(self):
        self.vel = np.add(self.vel, self.acc*self.dt)
        self.angvel += self.angacc*self.dt
+
 
 
 
