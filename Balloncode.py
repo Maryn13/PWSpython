@@ -1,3 +1,4 @@
+
 import numpy as np
 import pygame
 import math as math
@@ -17,6 +18,7 @@ class PO:
    vel = np.array([0, 0])
 
    acc = np.array([0, 0])
+   velscale = 0
 
    def __init__(self, name, width, length, weight, mps, cm, m, loc = None):
 
@@ -70,7 +72,7 @@ class PO:
 
 
        mag = math.sqrt(a * a + b * b)
-       fwmag = mag *mag* 0.5 * 1.293 * 0.4 * 0.025
+       fwmag = mag *mag* 0.5 * 1.293 * 0.4 * 0.025 *1
 
        phi = 0
        if(self.vel[0]!= 0):
@@ -87,31 +89,53 @@ class PO:
 
    def action(self, choice):
        if choice == 0:
-           pass #niks
+           self.applyForce(0,0)
        elif choice == 1:
-           self.applyForce(0.2, 0)
+           self.applyForce(75, 0)
        elif choice == 2:
-           self.applyForce(0.0, 0.2)
+           self.applyForce(0.0, 75)
        elif choice == 3:
-           self.applyForce(0.2, 0.2)
+           self.applyForce(75, 75)
+
 
        elif choice == 4:
-           self.applyForce(-0.2, 0.0)
+           self.applyForce(75, 150)
        elif choice == 5:
-           self.applyForce(0.0, -0.2)
+           self.applyForce(150, 75)
 
        elif choice == 6:
-           self.applyForce(-0.2, -0.2)
+           self.applyForce(-75, -75)
        elif choice == 7:
-           self.applyForce(0.2, -0.2)
+           self.applyForce(-150, -75)
 
        elif choice == 8:
-           self.applyForce(-0.2, 0.2)
+           self.applyForce(-75, -150)
+
+   def actionv(self, choice):
+       if choice == 0:
+           self.velscale = 0
+           self.angvel = 0
+       elif choice == 1:
+           self.velscale = 50
+       elif choice == 2:
+           self.velscale = -50
+       elif choice == 3:
+           self.angvel = -0.1
+       elif choice == 4:
+           self.angvel = 0.1
+
+
+   def setVelocityWithV(self):
+       self.vel = np.array([math.cos(self.rot)*self.velscale, math.sin(self.rot)*self.velscale])
 
 
    def setVelocity(self):
        self.vel = np.add(self.vel, self.acc*self.dt)
        self.angvel += self.angacc*self.dt
+       if self.angvel > 2.5:
+           self.angvel = 2.5
+       elif self.angvel < -2.5:
+           self.angvel = -2.5
 
 
 
@@ -121,6 +145,7 @@ class PO:
    def move(self):
        self.loc = np.add(self.loc, self.vel*self.dt)
        self.rot += self.angvel*self.dt
+       self.rot = self.rot%(2*3.14159265358979323)
 
    def boundries(self, width, height):
        if self.loc[0] > width:
